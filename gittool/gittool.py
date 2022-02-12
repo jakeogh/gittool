@@ -74,4 +74,4 @@ def list_files(ctx,
             if verbose:
                 ic(index, path, _path)
             #assert _path.exists()  # nope, use .lstat()
-            output(_path, tty=tty, verbose=verbose,)
+            output(os.fsencode(_path.as_posix()), tty=tty, verbose=verbose,)
