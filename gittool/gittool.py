@@ -66,6 +66,8 @@ def list_files(ctx,
             git_command = sh.Command('git')
             for line in git_command('ls-tree', '--full-tree', '-r', '--name-only', 'HEAD', _iter=True):
                 ic(line)
+                line = line[1:-2]
+                ic(line)
             #_stderr = git_command.stderr
             #_stdout = git_command.stdout
             #ic(_stdout)
