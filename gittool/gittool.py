@@ -17,7 +17,8 @@ from asserttool import tv
 from click_auto_help import AHGroup
 from clicktool import click_add_options
 from clicktool import click_global_options
-from git import Repo
+#from git import Repo
+from dulwich import porcelain
 from mptool import output
 from unmp import unmp
 from with_chdir import chdir
@@ -66,37 +67,39 @@ def list_files(ctx,
     for index, _path in enumerate(iterator):
         ic(index, _path)
         path = Path(os.fsdecode(_path))
-        #repo = Repo(path)
-        #ic(repo)
-        #with repo.config_reader():
-        #    ic(repo)
-        #    ic(repo.is_dirty())
-        #    ic(dir(repo))
-        #    ic(dir(repo.head))
-        #    head = repo.head
-        #    ic(head)
-        #    tree = repo.heads.master.commit.tree
-        #    ic(tree)
-        #    for thing in tree:
-        #        ic(thing)
-        #        for _thing in thing:
-        #            ic(_thing)
-        #    #for blob in tree.blobs():
-        #    #    ic(blob)
-        #    #for item in repo.head.iter_items():
-        #    #    ic(item)
-
         with chdir(path):
-            git_command = sh.Command('git')
-            for line in git_command('ls-tree', '--full-tree', '-r', '--name-only', 'HEAD', _iter=True):
-                #ic(line)
-                assert line.endswith('\n')
-                line = line[:-1]
-                sys.stdout.write(line)
-                ic(line)
-                ic(line.encode('utf8'))
-            #_stderr = git_command.stderr
-            #_stdout = git_command.stdout
-            #ic(_stdout)
-            #ic(_stderr)
+            ic(porcelain.log('.', max_entries=1))
+        ##repo = Repo(path)
+        ##ic(repo)
+        ##with repo.config_reader():
+        ##    ic(repo)
+        ##    ic(repo.is_dirty())
+        ##    ic(dir(repo))
+        ##    ic(dir(repo.head))
+        ##    head = repo.head
+        ##    ic(head)
+        ##    tree = repo.heads.master.commit.tree
+        ##    ic(tree)
+        ##    for thing in tree:
+        ##        ic(thing)
+        ##        for _thing in thing:
+        ##            ic(_thing)
+        ##    #for blob in tree.blobs():
+        ##    #    ic(blob)
+        ##    #for item in repo.head.iter_items():
+        ##    #    ic(item)
+
+        #with chdir(path):
+        #    git_command = sh.Command('git')
+        #    for line in git_command('ls-tree', '--full-tree', '-r', '--name-only', 'HEAD', _iter=True):
+        #        #ic(line)
+        #        assert line.endswith('\n')
+        #        line = line[:-1]
+        #        sys.stdout.write(line)
+        #        ic(line)
+        #        ic(line.encode('utf8'))
+        #    #_stderr = git_command.stderr
+        #    #_stdout = git_command.stdout
+        #    #ic(_stdout)
+        #    #ic(_stderr)
 
