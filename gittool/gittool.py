@@ -63,7 +63,7 @@ def list_files(ctx,
     index = 0
     for index, path in enumerate(iterator):
         ic(index, path)
-        repo = repo = Repo(path)
+        repo = Repo(path)
         ic(repo)
         with repo.config_reader() as cr:
             ic(cr)
