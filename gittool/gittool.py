@@ -65,35 +65,35 @@ def list_files(ctx,
     for index, _path in enumerate(iterator):
         ic(index, _path)
         path = Path(os.fsdecode(_path))
-        repo = Repo(path)
-        ic(repo)
-        with repo.config_reader():
-            ic(repo)
-            ic(repo.is_dirty())
-            ic(dir(repo))
-            ic(dir(repo.head))
-            head = repo.head
-            ic(head)
-            tree = repo.heads.master.commit.tree
-            ic(tree)
-            for thing in tree:
-                ic(thing)
-                for _thing in thing:
-                    ic(_thing)
-            #for blob in tree.blobs():
-            #    ic(blob)
-            #for item in repo.head.iter_items():
-            #    ic(item)
+        #repo = Repo(path)
+        #ic(repo)
+        #with repo.config_reader():
+        #    ic(repo)
+        #    ic(repo.is_dirty())
+        #    ic(dir(repo))
+        #    ic(dir(repo.head))
+        #    head = repo.head
+        #    ic(head)
+        #    tree = repo.heads.master.commit.tree
+        #    ic(tree)
+        #    for thing in tree:
+        #        ic(thing)
+        #        for _thing in thing:
+        #            ic(_thing)
+        #    #for blob in tree.blobs():
+        #    #    ic(blob)
+        #    #for item in repo.head.iter_items():
+        #    #    ic(item)
 
-        #with chdir(path):
-        #    git_command = sh.Command('git')
-        #    for line in git_command('ls-tree', '--full-tree', '-r', '--name-only', 'HEAD', _iter=True):
-        #        ic(line)
-        #        assert line.endswith('\n')
-        #        line = line[1:-2]
-        #        ic(line)
-        #    #_stderr = git_command.stderr
-        #    #_stdout = git_command.stdout
-        #    #ic(_stdout)
-        #    #ic(_stderr)
+        with chdir(path):
+            git_command = sh.Command('git')
+            for line in git_command('ls-tree', '--full-tree', '-r', '--name-only', 'HEAD', _iter=True):
+                ic(line)
+                assert line.endswith('\n')
+                line = line[-1]
+                ic(line)
+            #_stderr = git_command.stderr
+            #_stdout = git_command.stdout
+            #ic(_stdout)
+            #ic(_stderr)
 
