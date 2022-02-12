@@ -3,6 +3,7 @@
 # tab-width:4
 
 import os
+import sys
 from pathlib import Path
 from signal import SIG_DFL
 from signal import SIGPIPE
@@ -91,6 +92,7 @@ def list_files(ctx,
                 #ic(line)
                 assert line.endswith('\n')
                 line = line[:-1]
+                sys.stdout.write(line)
                 ic(line)
                 ic(line.encode('utf8'))
             #_stderr = git_command.stderr
