@@ -73,5 +73,5 @@ def list_files(ctx,
             _path = path / Path(os.fsdecode(thing))
             if verbose:
                 ic(index, path, _path)
-            assert _path.exists()
+            #assert _path.exists()  # nope, use .lstat()
             output(_path, tty=tty, verbose=verbose,)
