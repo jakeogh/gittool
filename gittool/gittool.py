@@ -71,5 +71,7 @@ def list_files(ctx,
 
         for thing in repo.open_index():
             _path = path / Path(os.fsdecode(thing))
+            if verbose:
+                ic(index, path, _path)
             assert _path.exists()
             output(_path, tty=tty, verbose=verbose,)
