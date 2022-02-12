@@ -70,5 +70,5 @@ def list_files(ctx,
         repo = Repo(path)
 
         for thing in repo.open_index():
-            _path = path / Path(thing)
+            _path = path / Path(os.fsdecode(thing))
             output(_path, tty=tty, verbose=verbose,)
