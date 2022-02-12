@@ -61,10 +61,12 @@ def list_files(ctx,
 
     index = 0
     for index, path in enumerate(iterator):
+        ic(index, path)
         with chdir(path):
             git_command = sh.Command('git')
             git_command('ls-tree', '--full-tree', '-r', '--name-only', 'HEAD')
             _stderr = git_command.stderr
             _stdout = git_command.stdout
             ic(_stdout)
+            ic(_stderr)
 
