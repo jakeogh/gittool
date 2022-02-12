@@ -2,6 +2,7 @@
 # -*- coding: utf8 -*-
 # tab-width:4
 
+import os
 from pathlib import Path
 from signal import SIG_DFL
 from signal import SIGPIPE
@@ -63,7 +64,8 @@ def list_files(ctx,
     index = 0
     for index, path in enumerate(iterator):
         ic(index, path)
-        repo = Repo(path)
+        _path = Path(path)
+        repo = Repo(_path)
         ic(repo)
         with repo.config_reader() as cr:
             ic(cr)
