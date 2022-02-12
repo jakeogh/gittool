@@ -71,4 +71,5 @@ def list_files(ctx,
 
         for thing in repo.open_index():
             _path = path / Path(os.fsdecode(thing))
+            assert _path.exists()
             output(_path, tty=tty, verbose=verbose,)
