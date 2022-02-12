@@ -15,6 +15,7 @@ from asserttool import tv
 from click_auto_help import AHGroup
 from clicktool import click_add_options
 from clicktool import click_global_options
+from git import Repo
 from mptool import output
 from unmp import unmp
 from with_chdir import chdir
@@ -62,15 +63,21 @@ def list_files(ctx,
     index = 0
     for index, path in enumerate(iterator):
         ic(index, path)
-        with chdir(path):
-            git_command = sh.Command('git')
-            for line in git_command('ls-tree', '--full-tree', '-r', '--name-only', 'HEAD', _iter=True):
-                ic(line)
-                assert line.endswith('\n')
-                line = line[1:-2]
-                ic(line)
-            #_stderr = git_command.stderr
-            #_stdout = git_command.stdout
-            #ic(_stdout)
-            #ic(_stderr)
+        repo = repo = Repo(path)
+        ic(repo)
+        with repo.config_reader() as cr:
+            ic(cr)
+
+
+        #with chdir(path):
+        #    git_command = sh.Command('git')
+        #    for line in git_command('ls-tree', '--full-tree', '-r', '--name-only', 'HEAD', _iter=True):
+        #        ic(line)
+        #        assert line.endswith('\n')
+        #        line = line[1:-2]
+        #        ic(line)
+        #    #_stderr = git_command.stderr
+        #    #_stdout = git_command.stdout
+        #    #ic(_stdout)
+        #    #ic(_stderr)
 
