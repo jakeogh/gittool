@@ -66,15 +66,16 @@ def list_files(ctx,
 
     index = 0
     for index, _path in enumerate(iterator):
-        ic(index, _path)
+        #ic(index, _path)
         path = Path(os.fsdecode(_path))
         repo = Repo(path)
-        ic(repo)
-        for thing in dir(repo):
-            ic(thing)
+        #ic(repo)
+        #for thing in dir(repo):
+        #    ic(thing)
 
         for thing in repo.open_index():
-            ic('open_index():', thing)
+            #ic('open_index():', thing)
+            ic(thing)
 
         #with chdir(path):
         #    ic(repo)
