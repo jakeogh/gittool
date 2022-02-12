@@ -70,6 +70,7 @@ def list_files(ctx,
         with repo.config_reader():
             ic(repo)
             ic(repo.is_dirty())
+            ic(dir(repo))
 
         #with chdir(path):
         #    git_command = sh.Command('git')
