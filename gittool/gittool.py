@@ -71,6 +71,7 @@ def list_files(ctx,
             ic(repo)
             ic(repo.is_dirty())
             ic(dir(repo))
+            ic(dir(repo.head))
 
         #with chdir(path):
         #    git_command = sh.Command('git')
