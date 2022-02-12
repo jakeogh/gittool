@@ -62,10 +62,10 @@ def list_files(ctx,
     del paths
 
     index = 0
-    for index, path in enumerate(iterator):
-        ic(index, path)
-        _path = Path(path)
-        repo = Repo(_path)
+    for index, _path in enumerate(iterator):
+        ic(index, _path)
+        path = Path(os.fsdecode(path))
+        repo = Repo(path)
         ic(repo)
         with repo.config_reader() as cr:
             ic(cr)
