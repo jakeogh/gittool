@@ -78,6 +78,8 @@ def list_files(ctx,
             ic(tree)
             for thing in tree:
                 ic(thing)
+                for _thing in thing:
+                    ic(_thing)
             #for blob in tree.blobs():
             #    ic(blob)
             #for item in repo.head.iter_items():
