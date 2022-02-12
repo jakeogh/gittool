@@ -2,7 +2,6 @@
 # -*- coding: utf8 -*-
 # tab-width:4
 
-import sys
 from pathlib import Path
 from signal import SIG_DFL
 from signal import SIGPIPE
@@ -41,7 +40,6 @@ def cli(ctx,
 
 @cli.command()
 @click.argument("paths", type=str, nargs=-1)
-@click.option('--ipython', is_flag=True)
 @click_add_options(click_global_options)
 @click.pass_context
 def list_files(ctx,
