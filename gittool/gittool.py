@@ -18,11 +18,12 @@ from click_auto_help import AHGroup
 from clicktool import click_add_options
 from clicktool import click_global_options
 #from git import Repo
-from dulwich import porcelain
+#from dulwich import porcelain
 from dulwich.repo import Repo
 from mptool import output
 from unmp import unmp
-from with_chdir import chdir
+
+#from with_chdir import chdir
 
 sh.mv = None  # use sh.busybox('mv'), coreutils ignores stdin read errors
 
@@ -44,11 +45,11 @@ def cli(ctx,
                       )
 
 
-@cli.command()
+@cli.command('list-paths')
 @click.argument("paths", type=str, nargs=-1)
 @click_add_options(click_global_options)
 @click.pass_context
-def list_files(ctx,
+def list_paths(ctx,
                paths: tuple[str],
                verbose: Union[bool, int, float],
                verbose_inf: bool,
