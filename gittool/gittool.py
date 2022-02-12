@@ -92,6 +92,7 @@ def list_files(ctx,
                 assert line.endswith('\n')
                 line = line[:-1]
                 ic(line)
+                ic(line.decode('utf8'))
             #_stderr = git_command.stderr
             #_stdout = git_command.stdout
             #ic(_stdout)
