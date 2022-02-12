@@ -90,7 +90,7 @@ def list_files(ctx,
             for line in git_command('ls-tree', '--full-tree', '-r', '--name-only', 'HEAD', _iter=True):
                 ic(line)
                 assert line.endswith('\n')
-                line = line[-1]
+                line = line[:-1]
                 ic(line)
             #_stderr = git_command.stderr
             #_stdout = git_command.stdout
