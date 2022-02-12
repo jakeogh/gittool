@@ -64,8 +64,7 @@ def list_files(ctx,
         ic(index, path)
         with chdir(path):
             git_command = sh.Command('git')
-            #for line in git_command('ls-tree', '--full-tree', '-r', '--name-only', 'HEAD', _iter=True):
-            for line in git_command('ls-tree', '--full-tree', '-r', 'HEAD', _iter=True):
+            for line in git_command('ls-tree', '--full-tree', '-r', '--name-only', 'HEAD', _iter=True):
                 ic(line)
                 assert line.endswith('\n')
                 line = line[1:-2]
