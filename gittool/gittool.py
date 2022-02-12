@@ -73,6 +73,9 @@ def list_files(ctx,
         for thing in dir(repo):
             ic(thing)
 
+        for thing in repo.open_index():
+            ic('open_index():', thing)
+
         #with chdir(path):
         #    ic(repo)
         #    ic(porcelain.log('.', max_entries=1))
