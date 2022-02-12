@@ -67,9 +67,9 @@ def list_files(ctx,
         path = Path(os.fsdecode(_path))
         repo = Repo(path)
         ic(repo)
-        with repo.config_reader() as cr:
-            ic(cr)
-
+        with repo.config_reader():
+            ic(repo)
+            ic(repo.is_dirty())
 
         #with chdir(path):
         #    git_command = sh.Command('git')
