@@ -70,7 +70,7 @@ def list_files(ctx,
         path = Path(os.fsdecode(_path))
         repo = Repo(path)
         ic(repo)
-        for thing in repo:
+        for thing in dir(repo):
             ic(thing)
 
         #with chdir(path):
