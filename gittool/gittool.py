@@ -76,7 +76,7 @@ def list_files(ctx,
             ic(head)
             tree = repo.heads.master.commit.tree
             ic(tree)
-            for blob in tree.blobs:
+            for blob in tree.blobs():
                 ic(blob)
             #for item in repo.head.iter_items():
             #    ic(item)
