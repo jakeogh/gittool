@@ -75,7 +75,8 @@ def list_files(ctx,
 
         for thing in repo.open_index():
             #ic('open_index():', thing)
-            ic(thing)
+            #ic(thing)
+            output(thing, tty=tty, verbose=verbose,)
 
         #with chdir(path):
         #    ic(repo)
