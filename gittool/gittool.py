@@ -13,21 +13,20 @@ from typing import Union
 import click
 import sh
 from asserttool import ic
-from asserttool import tv
 from click_auto_help import AHGroup
 from clicktool import click_add_options
 from clicktool import click_global_options
-#from git import Repo
+from clicktool import tv
 #from dulwich import porcelain
 from dulwich.repo import Repo
 from mptool import output
 from unmp import unmp
 
-#from with_chdir import chdir
-
 sh.mv = None  # use sh.busybox('mv'), coreutils ignores stdin read errors
 
 signal(SIGPIPE, SIG_DFL)
+
+
 
 
 #@with_plugins(iter_entry_points('click_command_tree'))
@@ -77,3 +76,6 @@ def list_paths(ctx,
                 ic(index, path, _path)
             #assert _path.exists()  # nope, use .lstat()
             output(os.fsencode(_path.as_posix()), tty=tty, verbose=verbose,)
+
+
+
