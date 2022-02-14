@@ -27,6 +27,13 @@ sh.mv = None  # use sh.busybox('mv'), coreutils ignores stdin read errors
 signal(SIGPIPE, SIG_DFL)
 
 
+def unstaged_commits_exist(path: Path) -> bool:
+    _git = sh.Command("/home/cfg/git/unstaged_changes_exist_for_file.sh")
+    try:
+        _git(path.as_posix())
+    except sh.ErrorReturnCode_1:
+        return True
+    return False
 
 
 #@with_plugins(iter_entry_points('click_command_tree'))

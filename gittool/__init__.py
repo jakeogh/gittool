@@ -1,1 +1,1 @@
-#from .gittool import gittool
+from .gittool import unstaged_commits_exist
