@@ -8,6 +8,7 @@ from pathlib import Path
 from signal import SIG_DFL
 from signal import SIGPIPE
 from signal import signal
+from typing import List
 from typing import Union
 
 import click
@@ -34,6 +35,18 @@ def unstaged_commits_exist(path: Path) -> bool:
     except sh.ErrorReturnCode_1:
         return True
     return False
+
+
+def get_remotes(repo_path: Path, verbose: Union[bool, int, float],) -> List[dict]:
+    repo = Repo(repo_path)
+    remotes = []
+    for config_file in repo.get_config_stack().backends:
+        for k, v in config_file.items():
+            if verbose:
+                print(f'{k=}', f'{v=}')
+            if k[0] == b"remote":
+                remotes.append({k[1].decode("utf8"): v[b"url"].decode("utf8")})
+    return remotes
 
 
 #@with_plugins(iter_entry_points('click_command_tree'))
@@ -109,12 +122,6 @@ def list_remotes(ctx,
     index = 0
     for index, _path in enumerate(iterator):
         repo_path = Path(os.fsdecode(_path))
-        repo = Repo(repo_path)
-        import IPython; IPython.embed()
-
-        for thing in repo.open_index():
-            repo_file_path = repo_path / Path(os.fsdecode(thing))
-            if verbose:
-                ic(index, repo_path, repo_file_path)
-            #assert _path.exists()  # nope, use .lstat()
-            output(os.fsencode(repo_file_path.as_posix()), tty=tty, verbose=verbose,)
+        remotes = get_remotes(repo_path=repo_path, verbose=verbose,)
+        for remote in remotes:
+            output(remote, tty=tty, verbose=verbose)
