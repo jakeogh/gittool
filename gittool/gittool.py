@@ -74,15 +74,15 @@ def list_paths(ctx,
 
     index = 0
     for index, _path in enumerate(iterator):
-        path = Path(os.fsdecode(_path))
-        repo = Repo(path)
+        repo_path = Path(os.fsdecode(_path))
+        repo = Repo(repo_path)
 
         for thing in repo.open_index():
-            _path = path / Path(os.fsdecode(thing))
+            repo_file_path = repo_path / Path(os.fsdecode(thing))
             if verbose:
-                ic(index, path, _path)
+                ic(index, repo_path, repo_file_path)
             #assert _path.exists()  # nope, use .lstat()
-            output(os.fsencode(_path.as_posix()), tty=tty, verbose=verbose,)
+            output(os.fsencode(repo_file_path.as_posix()), tty=tty, verbose=verbose,)
 
 
 
