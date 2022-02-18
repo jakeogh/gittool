@@ -52,11 +52,11 @@ def cli(ctx,
 
 
 @cli.command('list-paths')
-@click.argument("paths", type=str, nargs=-1)
+@click.argument("repo_paths", type=str, nargs=-1)
 @click_add_options(click_global_options)
 @click.pass_context
 def list_paths(ctx,
-               paths: tuple[str],
+               repo_paths: tuple[str],
                verbose: Union[bool, int, float],
                verbose_inf: bool,
                ):
@@ -66,11 +66,11 @@ def list_paths(ctx,
                       verbose_inf=verbose_inf,
                       )
 
-    if paths:
-        iterator = paths
+    if repo_paths:
+        iterator = repo_paths
     else:
         iterator = unmp(valid_types=[bytes,], verbose=verbose)
-    del paths
+    del repo_paths
 
     index = 0
     for index, _path in enumerate(iterator):
@@ -85,4 +85,36 @@ def list_paths(ctx,
             output(os.fsencode(repo_file_path.as_posix()), tty=tty, verbose=verbose,)
 
 
+@cli.command('list-remotes')
+@click.argument("repo_paths", type=str, nargs=-1)
+@click_add_options(click_global_options)
+@click.pass_context
+def list_remotes(ctx,
+                 repo_paths: tuple[str],
+                 verbose: Union[bool, int, float],
+                 verbose_inf: bool,
+                 ):
 
+    tty, verbose = tv(ctx=ctx,
+                      verbose=verbose,
+                      verbose_inf=verbose_inf,
+                      )
+
+    if repo_paths:
+        iterator = repo_paths
+    else:
+        iterator = unmp(valid_types=[bytes,], verbose=verbose)
+    del repo_paths
+
+    index = 0
+    for index, _path in enumerate(iterator):
+        repo_path = Path(os.fsdecode(_path))
+        repo = Repo(repo_path)
+        import IPython; IPython.embed()
+
+        for thing in repo.open_index():
+            repo_file_path = repo_path / Path(os.fsdecode(thing))
+            if verbose:
+                ic(index, repo_path, repo_file_path)
+            #assert _path.exists()  # nope, use .lstat()
+            output(os.fsencode(repo_file_path.as_posix()), tty=tty, verbose=verbose,)
