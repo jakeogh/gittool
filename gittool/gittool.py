@@ -30,31 +30,33 @@ signal(SIGPIPE, SIG_DFL)
 
 
 def find_repo_root(path: Path, verbose: Union[bool, int, float]):
-    repo_root = walkup_until_found(path=path, name='.git', verbose=verbose)
+    repo_root = walkup_until_found(path=path, name=".git", verbose=verbose).parent
     return repo_root
 
 
 def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool:
-    #there is likely a angryfiles bug here...
-    #result = git("diff-index", "HEAD", "--")
+    # there is likely a angryfiles bug here...
+    # result = git("diff-index", "HEAD", "--")
+    ic(path)
     repo_root = find_repo_root(path=path, verbose=verbose)
     ic(repo_root)
 
-    git_command = sh.Command('git')
-    #git_command.bake('diff-index', "HEAD", "--")
-    git_command = git_command.bake('diff-index', "HEAD")
+    git_command = sh.Command("git")
+    # git_command.bake('diff-index', "HEAD", "--")
+    git_command = git_command.bake("diff-index", "HEAD")
     ic(git_command)
-    results = git_command(_tty_out=False).stdout.decode('utf8').splitlines()
-    #ic(result.stdout)
+    results = git_command(_tty_out=False).stdout.decode("utf8").splitlines()
+    # ic(result.stdout)
     ic(results)
+    relative_path = path.relative_path(repo_root)
+    ic(relative_path)
     for result in results:
         ic(result)
-        if result.endswith(path.as_posix()):
+        if result.endswith(relative_path.as_posix()):
             return True
-    #if path.as_posix() in result:
+    # if path.as_posix() in result:
     #    return True
     return False
-
 
     # _git = sh.Command("/home/cfg/git/unstaged_changes_exist_for_file.sh")
     # try:
