@@ -22,15 +22,24 @@ from clicktool import tv
 from dulwich.repo import Repo
 from mptool import output
 from mptool import unmp
+from walkup_until_found import walkup_until_found
 
 sh.mv = None  # use sh.busybox('mv'), coreutils ignores stdin read errors
 
 signal(SIGPIPE, SIG_DFL)
 
 
+def find_repo_root(path: Path, verbose: Union[bool, int, float]):
+    repo_root = walkup_until_found(path=path, name='.git', verbose=verbose)
+    return repo_root
+
+
 def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool:
     #there is likely a angryfiles bug here...
     #result = git("diff-index", "HEAD", "--")
+    repo_root = find_repo_root(path=path, verbose=verbose)
+    ic(repo_root)
+
     git_command = sh.Command('git')
     #git_command.bake('diff-index', "HEAD", "--")
     git_command = git_command.bake('diff-index', "HEAD")
