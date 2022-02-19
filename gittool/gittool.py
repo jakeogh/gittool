@@ -28,12 +28,17 @@ sh.mv = None  # use sh.busybox('mv'), coreutils ignores stdin read errors
 signal(SIGPIPE, SIG_DFL)
 
 
-def unstaged_commits_exist(path: Path) -> bool:
-    result = sh.git.diff_index("HEAD", "--")
+def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool:
+    #result = git("diff-index", "HEAD", "--")
+    git_command = sh.Command('git')
+    git_command.bake('diff-index', "HEAD", "--")
+    result = git_command(_tty_out=False)
     ic(result.stdout)
     if path in result:
         return True
     return False
+
+
     # _git = sh.Command("/home/cfg/git/unstaged_changes_exist_for_file.sh")
     # try:
     #    _git(path.as_posix())
@@ -84,7 +89,7 @@ def list_paths(
     repo_paths: tuple[str],
     verbose: Union[bool, int, float],
     verbose_inf: bool,
-):
+) -> None:
 
     tty, verbose = tv(
         ctx=ctx,
@@ -157,3 +162,28 @@ def list_remotes(
         )
         for remote in remotes:
             output(remote, tty=tty, verbose=verbose)
+
+
+@cli.command("unstaged-commit")
+@click.argument("path", type=str, nargs=1)
+@click_add_options(click_global_options)
+@click.pass_context
+def unstaged_commit(
+    ctx,
+    path: str,
+    verbose: Union[bool, int, float],
+    verbose_inf: bool,
+):
+
+    tty, verbose = tv(
+        ctx=ctx,
+        verbose=verbose,
+        verbose_inf=verbose_inf,
+    )
+
+    result = unstaged_commits_exist(path=Path(path), verbose=verbose)
+    output(
+        result,
+        tty=tty,
+        verbose=verbose,
+    )
