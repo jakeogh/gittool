@@ -48,7 +48,7 @@ def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool
     results = git_command(_tty_out=False).stdout.decode("utf8").splitlines()
     # ic(result.stdout)
     ic(results)
-    relative_path = path.relative_path(repo_root)
+    relative_path = path.relative_to(repo_root)
     ic(relative_path)
     for result in results:
         ic(result)
