@@ -31,7 +31,9 @@ signal(SIGPIPE, SIG_DFL)
 def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool:
     #result = git("diff-index", "HEAD", "--")
     git_command = sh.Command('git')
-    git_command.bake('diff-index', "HEAD", "--")
+    #git_command.bake('diff-index', "HEAD", "--")
+    git_command.bake('diff-index', "HEAD")
+    ic(git_command)
     result = git_command(_tty_out=False)
     ic(result.stdout)
     if path in result:
