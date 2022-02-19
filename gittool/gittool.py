@@ -36,9 +36,9 @@ def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool
     ic(git_command)
     result = git_command(_tty_out=False)
     ic(result.stdout)
-    if path in result:
-        return True
-    return False
+    #if path.as_posix() in result:
+    #    return True
+    #return False
 
 
     # _git = sh.Command("/home/cfg/git/unstaged_changes_exist_for_file.sh")
