@@ -35,9 +35,13 @@ def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool
     #git_command.bake('diff-index', "HEAD", "--")
     git_command = git_command.bake('diff-index', "HEAD")
     ic(git_command)
-    result = git_command(_tty_out=False).stdout.decode('utf8').splitlines()
+    results = git_command(_tty_out=False).stdout.decode('utf8').splitlines()
     #ic(result.stdout)
-    ic(result)
+    ic(results)
+    for result in results:
+        ic(result)
+        if result.endswith(path.as_posix()):
+            return True
     #if path.as_posix() in result:
     #    return True
     return False
