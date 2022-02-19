@@ -23,6 +23,7 @@ from dulwich.repo import Repo
 from mptool import output
 from mptool import unmp
 from walkup_until_found import walkup_until_found
+from with_chdir import chdir
 
 sh.mv = None  # use sh.busybox('mv'), coreutils ignores stdin read errors
 
@@ -40,31 +41,31 @@ def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool
     ic(path)
     repo_root = find_repo_root(path=path, verbose=verbose)
     ic(repo_root)
-
-    git_command = sh.Command("git")
-    # git_command.bake('diff-index', "HEAD", "--")
-    git_command = git_command.bake("diff-index", "HEAD")
-    ic(git_command)
-    results = git_command(_tty_out=False).stdout.decode("utf8").splitlines()
-    # ic(result.stdout)
-    ic(results)
-    relative_path = path.relative_to(repo_root)
-    ic(relative_path)
-    for result in results:
-        ic(result)
-        if result.endswith(relative_path.as_posix()):
-            return True
-    # if path.as_posix() in result:
-    #    return True
+    with chdir(repo_root, verbose=verbose):
+        git_command = sh.Command("git")
+        # git_command.bake('diff-index', "HEAD", "--")
+        git_command = git_command.bake("diff-index", "HEAD")
+        ic(git_command)
+        results = git_command(_tty_out=False).stdout.decode("utf8").splitlines()
+        # ic(result.stdout)
+        ic(results)
+        relative_path = path.relative_to(repo_root)
+        ic(relative_path)
+        for result in results:
+            ic(result)
+            if result.endswith(relative_path.as_posix()):
+                return True
+        # if path.as_posix() in result:
+        #    return True
     return False
 
-    # _git = sh.Command("/home/cfg/git/unstaged_changes_exist_for_file.sh")
-    # try:
-    #    _git(path.as_posix())
-    # except sh.ErrorReturnCode_1 as e:
-    #    ic(e)
-    #    return True
-    # return False
+        # _git = sh.Command("/home/cfg/git/unstaged_changes_exist_for_file.sh")
+        # try:
+        #    _git(path.as_posix())
+        # except sh.ErrorReturnCode_1 as e:
+        #    ic(e)
+        #    return True
+        # return False
 
 
 def get_remotes(
