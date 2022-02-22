@@ -131,7 +131,7 @@ def list_paths(
 
     index = 0
     for index, _path in enumerate(iterator):
-        repo_path = Path(os.fsdecode(_path))
+        repo_path = Path(os.fsdecode(_path)).resolve()
         repo = Repo(repo_path)
 
         for thing in repo.open_index():
@@ -141,8 +141,8 @@ def list_paths(
             # assert _path.exists()  # nope, use .lstat()
             output(
                 os.fsencode(repo_file_path.as_posix()),
-                dict_input=False,
-                reason=None,
+                dict_input=dict_input,
+                reason=thing,
                 tty=tty,
                 verbose=verbose,
             )
@@ -179,7 +179,7 @@ def list_remotes(
 
     index = 0
     for index, _path in enumerate(iterator):
-        repo_path = Path(os.fsdecode(_path))
+        repo_path = Path(os.fsdecode(_path)).resolve()
         remotes = get_remotes(
             repo_path=repo_path,
             verbose=verbose,
@@ -206,7 +206,8 @@ def unstaged_commit(
         verbose_inf=verbose_inf,
     )
 
-    result = unstaged_commits_exist(path=Path(path), verbose=verbose)
+    _path = Path(path).resolve()
+    result = unstaged_commits_exist(path=_path, verbose=verbose)
     output(
         result,
         reason=None,
