@@ -3,7 +3,6 @@
 # tab-width:4
 
 import os
-# import sys
 from pathlib import Path
 from signal import SIG_DFL
 from signal import SIGPIPE
@@ -91,6 +90,7 @@ def cli(
     ctx,
     verbose: Union[bool, int, float],
     verbose_inf: bool,
+    dict_input: bool,
 ):
 
     tty, verbose = tv(
@@ -109,6 +109,7 @@ def list_paths(
     repo_paths: tuple[str],
     verbose: Union[bool, int, float],
     verbose_inf: bool,
+    dict_input: bool,
 ) -> None:
 
     tty, verbose = tv(
