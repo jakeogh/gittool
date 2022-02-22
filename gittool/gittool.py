@@ -59,13 +59,13 @@ def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool
         #    return True
     return False
 
-        # _git = sh.Command("/home/cfg/git/unstaged_changes_exist_for_file.sh")
-        # try:
-        #    _git(path.as_posix())
-        # except sh.ErrorReturnCode_1 as e:
-        #    ic(e)
-        #    return True
-        # return False
+    # _git = sh.Command("/home/cfg/git/unstaged_changes_exist_for_file.sh")
+    # try:
+    #    _git(path.as_posix())
+    # except sh.ErrorReturnCode_1 as e:
+    #    ic(e)
+    #    return True
+    # return False
 
 
 def get_remotes(
@@ -140,6 +140,8 @@ def list_paths(
             # assert _path.exists()  # nope, use .lstat()
             output(
                 os.fsencode(repo_file_path.as_posix()),
+                dict_input=False,
+                reason=None,
                 tty=tty,
                 verbose=verbose,
             )
@@ -154,6 +156,7 @@ def list_remotes(
     repo_paths: tuple[str],
     verbose: Union[bool, int, float],
     verbose_inf: bool,
+    dict_input: bool,
 ):
 
     tty, verbose = tv(
@@ -181,7 +184,7 @@ def list_remotes(
             verbose=verbose,
         )
         for remote in remotes:
-            output(remote, tty=tty, verbose=verbose)
+            output(remote, reason=None, dict_input=dict_input, tty=tty, verbose=verbose)
 
 
 @cli.command("unstaged-commit")
@@ -193,6 +196,7 @@ def unstaged_commit(
     path: str,
     verbose: Union[bool, int, float],
     verbose_inf: bool,
+    dict_input: bool,
 ):
 
     tty, verbose = tv(
@@ -204,6 +208,8 @@ def unstaged_commit(
     result = unstaged_commits_exist(path=Path(path), verbose=verbose)
     output(
         result,
+        reason=None,
+        dict_input=dict_input,
         tty=tty,
         verbose=verbose,
     )
