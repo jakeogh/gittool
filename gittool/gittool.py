@@ -37,9 +37,9 @@ def find_repo_root(path: Path, verbose: Union[bool, int, float]):
 def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool:
     # there is likely a angryfiles bug here...
     # result = git("diff-index", "HEAD", "--")
-    ic(path)
     repo_root = find_repo_root(path=path, verbose=verbose)
-    ic(repo_root)
+    if verbose:
+        ic(path, repo_root)
     with chdir(repo_root, verbose=verbose):
         git_command = sh.Command("git")
         # git_command.bake('diff-index', "HEAD", "--")
