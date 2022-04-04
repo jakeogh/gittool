@@ -44,14 +44,17 @@ def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool
         git_command = sh.Command("git")
         # git_command.bake('diff-index', "HEAD", "--")
         git_command = git_command.bake("diff-index", "HEAD")
-        ic(git_command)
+        if verbose:
+            ic(git_command)
         results = git_command(_tty_out=False).stdout.decode("utf8").splitlines()
         # ic(result.stdout)
-        ic(results)
+        if verbose:
+            ic(results)
         relative_path = path.relative_to(repo_root)
-        ic(relative_path)
+        # ic(relative_path)
         for result in results:
-            ic(result)
+            if verbose:
+                ic(result)
             if result.endswith(relative_path.as_posix()):
                 return True
         # if path.as_posix() in result:
