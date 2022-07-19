@@ -20,7 +20,7 @@ from clicktool import tv
 # from dulwich import porcelain
 from dulwich.repo import Repo
 from mptool import output
-from mptool import unmp
+from unmp import unmp
 from walkup_until_found import walkup_until_found
 from with_chdir import chdir
 
