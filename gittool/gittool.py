@@ -90,7 +90,7 @@ def commits_between_inclusive(
 
     _rev_list_command = sh.Command("git")
     _rev_list_command = _rev_list_command.bake("rev-list")
-    _rev_list_command = _rev_list_command.bake("--count", "f{commit1}..{commit2}")
+    _rev_list_command = _rev_list_command.bake("--count", f"{commit1}..{commit2}")
     commit_count = str(_rev_list_command(_tty_out=False)).strip()
 
     # commit_count = str(sh.git.rev-list("--count", "f{commit1}..{commit2}")).strip()
