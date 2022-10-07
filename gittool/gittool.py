@@ -3,6 +3,7 @@
 # tab-width:4
 from __future__ import annotations
 
+import math
 import os
 from pathlib import Path
 from signal import SIG_DFL
@@ -16,12 +17,13 @@ from click_auto_help import AHGroup
 from clicktool import click_add_options
 from clicktool import click_global_options
 from clicktool import tv
-# from dulwich import porcelain
 from dulwich.repo import Repo
 from mptool import output
 from unmp import unmp
 from walkup_until_found import walkup_until_found
 from with_chdir import chdir
+
+# from dulwich import porcelain
 
 sh.mv = None  # use sh.busybox('mv'), coreutils ignores stdin read errors
 
@@ -88,14 +90,17 @@ def commits_between_inclusive(
     commit1: str, commit2: str, *, verbose: bool | int | float
 ):
 
+    assert commit1 != commit2
+    assert len(commit1) == len(commit2)
     _rev_list_command = sh.Command("git")
     _rev_list_command = _rev_list_command.bake("rev-list")
     _rev_list_command = _rev_list_command.bake("--count", f"{commit1}..{commit2}")
-    commit_count = str(_rev_list_command(_tty_out=False)).strip()
+    _commit_count = abs(int(str(_rev_list_command(_tty_out=False)).strip())) + 1
 
     # commit_count = str(sh.git.rev-list("--count", "f{commit1}..{commit2}")).strip()
-    ic(commit_count)
-    return int(commit_count)
+    if verbose:
+        ic(_commit_count)
+    return _commit_count
 
 
 # @with_plugins(iter_entry_points('click_command_tree'))
