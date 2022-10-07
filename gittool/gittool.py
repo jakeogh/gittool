@@ -38,7 +38,6 @@ def find_repo_root(path: Path, verbose: bool | int | float):
 
 
 def timestamp_for_commit(commit):
-    ic(commit)
     _tsc = sh.Command("git")
     _tsc = _tsc.bake("log")
     _tsc = _tsc.bake("-1", commit, "--pretty=format:%ct")
