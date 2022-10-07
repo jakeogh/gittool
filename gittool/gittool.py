@@ -281,7 +281,7 @@ def count_commits(
     )
 
 
-@cli.command("seconds_between_commits")
+@cli.command("seconds-between-commits")
 @click.argument("commit1", type=str, nargs=1)
 @click.argument("commit2", type=str, nargs=1)
 @click_add_options(click_global_options)
