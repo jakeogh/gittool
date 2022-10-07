@@ -23,7 +23,7 @@ from unmp import unmp
 from walkup_until_found import walkup_until_found
 from with_chdir import chdir
 
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 # from dulwich import porcelain
 
