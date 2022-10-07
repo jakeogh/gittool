@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 # tab-width:4
+from __future__ import annotations
 
 import os
 from pathlib import Path
 from signal import SIG_DFL
 from signal import SIGPIPE
 from signal import signal
-from typing import List
-from typing import Union
 
 import click
 import sh
@@ -29,12 +28,12 @@ sh.mv = None  # use sh.busybox('mv'), coreutils ignores stdin read errors
 signal(SIGPIPE, SIG_DFL)
 
 
-def find_repo_root(path: Path, verbose: Union[bool, int, float]):
+def find_repo_root(path: Path, verbose: bool | int | float):
     repo_root = walkup_until_found(path=path, name=".git", verbose=verbose).parent
     return repo_root
 
 
-def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool:
+def unstaged_commits_exist(path: Path, verbose: bool | int | float) -> bool:
     # there is likely a angryfiles bug here...
     # result = git("diff-index", "HEAD", "--")
     repo_root = find_repo_root(path=path, verbose=verbose)
@@ -72,8 +71,8 @@ def unstaged_commits_exist(path: Path, verbose: Union[bool, int, float]) -> bool
 
 def get_remotes(
     repo_path: Path,
-    verbose: Union[bool, int, float],
-) -> List[dict]:
+    verbose: bool | int | float,
+) -> list[dict]:
     repo = Repo(repo_path)
     remotes = []
     for config_file in repo.get_config_stack().backends:
@@ -85,15 +84,23 @@ def get_remotes(
     return remotes
 
 
+def commits_between_inclusive(
+    commit1: str, commit2: str, *, verbose: bool | int | float
+):
+    commit_count = str(sh.git.rev_list("--count", "f{commit1}..{commit2}")).strip()
+    ic(commit_count)
+    return int(commit_count)
+
+
 # @with_plugins(iter_entry_points('click_command_tree'))
 @click.group(no_args_is_help=True, cls=AHGroup)
 @click_add_options(click_global_options)
 @click.pass_context
 def cli(
     ctx,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
     verbose_inf: bool,
-    dict_input: bool,
+    dict_output: bool,
 ):
 
     tty, verbose = tv(
@@ -110,9 +117,9 @@ def cli(
 def list_paths(
     ctx,
     repo_paths: tuple[str],
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
     verbose_inf: bool,
-    dict_input: bool,
+    dict_output: bool,
 ) -> None:
 
     tty, verbose = tv(
@@ -144,7 +151,7 @@ def list_paths(
             # assert _path.exists()  # nope, use .lstat()
             output(
                 os.fsencode(repo_file_path.as_posix()),
-                dict_input=dict_input,
+                dict_output=dict_output,
                 reason=thing,
                 tty=tty,
                 verbose=verbose,
@@ -158,9 +165,9 @@ def list_paths(
 def list_remotes(
     ctx,
     repo_paths: tuple[str],
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
     verbose_inf: bool,
-    dict_input: bool,
+    dict_output: bool,
 ):
 
     tty, verbose = tv(
@@ -188,7 +195,9 @@ def list_remotes(
             verbose=verbose,
         )
         for remote in remotes:
-            output(remote, reason=None, dict_input=dict_input, tty=tty, verbose=verbose)
+            output(
+                remote, reason=None, dict_output=dict_output, tty=tty, verbose=verbose
+            )
 
 
 @cli.command("unstaged-commit")
@@ -198,9 +207,9 @@ def list_remotes(
 def unstaged_commit(
     ctx,
     path: str,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
     verbose_inf: bool,
-    dict_input: bool,
+    dict_output: bool,
 ):
 
     tty, verbose = tv(
@@ -214,7 +223,38 @@ def unstaged_commit(
     output(
         result,
         reason=None,
-        dict_input=dict_input,
+        dict_output=dict_output,
+        tty=tty,
+        verbose=verbose,
+    )
+
+
+@cli.command("unstaged-commit")
+@click.argument("commit1", type=str, nargs=1)
+@click.argument("commit2", type=str, nargs=1)
+@click_add_options(click_global_options)
+@click.pass_context
+def count_commits(
+    ctx,
+    commit1: str,
+    commit2: str,
+    verbose: bool | int | float,
+    verbose_inf: bool,
+    dict_output: bool,
+):
+
+    tty, verbose = tv(
+        ctx=ctx,
+        verbose=verbose,
+        verbose_inf=verbose_inf,
+    )
+
+    _count = commits_between_inclusive(commit1, commit2, verbose=verbose)
+
+    output(
+        _count,
+        reason=None,
+        dict_output=dict_output,
         tty=tty,
         verbose=verbose,
     )
