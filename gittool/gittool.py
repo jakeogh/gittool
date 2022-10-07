@@ -316,3 +316,32 @@ def _seconds_between_commits(
         tty=tty,
         verbose=verbose,
     )
+
+
+@cli.command("head")
+@click_add_options(click_global_options)
+@click.pass_context
+def _head(
+    ctx,
+    verbose: bool | int | float,
+    verbose_inf: bool,
+    dict_output: bool,
+):
+
+    tty, verbose = tv(
+        ctx=ctx,
+        verbose=verbose,
+        verbose_inf=verbose_inf,
+    )
+
+    _rev_parse = sh.Command("git")
+    _rev_parse = _rev_parse.bake("rev-parse", "HEAD")
+    _rev_parse = str(_rev_parse(_tty_out=False)).strip()
+
+    output(
+        _rev_parse,
+        reason=None,
+        dict_output=dict_output,
+        tty=tty,
+        verbose=verbose,
+    )
