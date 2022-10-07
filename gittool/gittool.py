@@ -3,6 +3,7 @@
 # tab-width:4
 from __future__ import annotations
 
+import logging
 import os
 from pathlib import Path
 from signal import SIG_DFL
@@ -22,6 +23,8 @@ from unmp import unmp
 from walkup_until_found import walkup_until_found
 from with_chdir import chdir
 
+logging.basicConfig(level=logging.INFO)
+
 # from dulwich import porcelain
 
 sh.mv = None  # use sh.busybox('mv'), coreutils ignores stdin read errors
@@ -39,6 +42,7 @@ def timestamp_for_commit(commit):
     _tsc = sh.Command("git")
     _tsc = _tsc.bake("log")
     _tsc = _tsc.bake(commit, "--pretty=format:%c")
+    ic(_tsc)
     _ts = _tsc(_tty_out=False)
     # _ts = sh.git.log(commit, "--pretty=format:%c")
     ic(_ts)
