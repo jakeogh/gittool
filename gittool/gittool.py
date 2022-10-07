@@ -229,7 +229,7 @@ def unstaged_commit(
     )
 
 
-@cli.command("unstaged-commit")
+@cli.command()
 @click.argument("commit1", type=str, nargs=1)
 @click.argument("commit2", type=str, nargs=1)
 @click_add_options(click_global_options)
