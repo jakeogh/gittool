@@ -3,7 +3,6 @@
 # tab-width:4
 from __future__ import annotations
 
-import math
 import os
 from pathlib import Path
 from signal import SIG_DFL
@@ -33,6 +32,18 @@ signal(SIGPIPE, SIG_DFL)
 def find_repo_root(path: Path, verbose: bool | int | float):
     repo_root = walkup_until_found(path=path, name=".git", verbose=verbose).parent
     return repo_root
+
+
+def timestamp_for_commit(commit):
+    _ts = sh.git.log(commit, "--pretty=format:%c")
+    return _ts
+
+
+def seconds_between_commits(commit1: str, commit2: str):
+    _ts1 = timestamp_for_commit(commit1)
+    _ts2 = timestamp_for_commit(commit2)
+    _sec = abs(_ts2 - _ts1)
+    return _sec
 
 
 def unstaged_commits_exist(path: Path, verbose: bool | int | float) -> bool:
@@ -103,7 +114,6 @@ def commits_between_inclusive(
     return _commit_count
 
 
-# @with_plugins(iter_entry_points('click_command_tree'))
 @click.group(no_args_is_help=True, cls=AHGroup)
 @click_add_options(click_global_options)
 @click.pass_context
@@ -261,6 +271,37 @@ def count_commits(
     )
 
     _count = commits_between_inclusive(commit1, commit2, verbose=verbose)
+
+    output(
+        _count,
+        reason=None,
+        dict_output=dict_output,
+        tty=tty,
+        verbose=verbose,
+    )
+
+
+@cli.command("seconds_between_commits")
+@click.argument("commit1", type=str, nargs=1)
+@click.argument("commit2", type=str, nargs=1)
+@click_add_options(click_global_options)
+@click.pass_context
+def _seconds_between_commits(
+    ctx,
+    commit1: str,
+    commit2: str,
+    verbose: bool | int | float,
+    verbose_inf: bool,
+    dict_output: bool,
+):
+
+    tty, verbose = tv(
+        ctx=ctx,
+        verbose=verbose,
+        verbose_inf=verbose_inf,
+    )
+
+    _count = seconds_between_commits(commit1, commit2)
 
     output(
         _count,
