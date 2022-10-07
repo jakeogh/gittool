@@ -35,8 +35,8 @@ def find_repo_root(path: Path, verbose: bool | int | float):
 
 
 def timestamp_for_commit(commit):
-    _ts = sh.git.log(commit, "--pretty=format:%c")
-    return _ts
+    _ts = str(sh.git.log(commit, "--pretty=format:%c")).strip()
+    return int(_ts)
 
 
 def seconds_between_commits(commit1: str, commit2: str):
