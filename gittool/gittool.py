@@ -33,6 +33,7 @@ signal(SIGPIPE, SIG_DFL)
 
 
 def find_repo_root(path: Path, verbose: bool | int | float):
+    ic(path)
     repo_root = walkup_until_found(path=path, name=".git", verbose=verbose).parent
     return repo_root
 
