@@ -3,7 +3,6 @@
 # tab-width:4
 from __future__ import annotations
 
-import logging
 import os
 from pathlib import Path
 from signal import SIG_DFL
@@ -23,7 +22,6 @@ from unmp import unmp
 from walkup_until_found import walkup_until_found
 from with_chdir import chdir
 
-# logging.basicConfig(level=logging.INFO)
 
 # from dulwich import porcelain
 
