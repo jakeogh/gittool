@@ -22,7 +22,6 @@ from unmp import unmp
 from walkup_until_found import walkup_until_found
 from with_chdir import chdir
 
-
 # from dulwich import porcelain
 
 sh.mv = None  # use sh.busybox('mv'), coreutils ignores stdin read errors
@@ -30,7 +29,10 @@ sh.mv = None  # use sh.busybox('mv'), coreutils ignores stdin read errors
 signal(SIGPIPE, SIG_DFL)
 
 
-def find_repo_root(path: Path, verbose: bool | int | float):
+def find_repo_root(
+    path: Path,
+    verbose: bool | int | float = False,
+):
     ic(path)
     repo_root = walkup_until_found(path=path, name=".git", verbose=verbose).parent
     return repo_root
@@ -51,7 +53,10 @@ def seconds_between_commits(commit1: str, commit2: str):
     return _sec
 
 
-def unstaged_commits_exist(path: Path, verbose: bool | int | float) -> bool:
+def unstaged_commits_exist(
+    path: Path,
+    verbose: bool | int | float = False,
+) -> bool:
     # there is likely a angryfiles bug here...
     # result = git("diff-index", "HEAD", "--")
     repo_root = find_repo_root(path=path, verbose=verbose)
@@ -89,7 +94,7 @@ def unstaged_commits_exist(path: Path, verbose: bool | int | float) -> bool:
 
 def get_remotes(
     repo_path: Path,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
 ) -> list[dict]:
     repo = Repo(repo_path)
     remotes = []
@@ -103,9 +108,11 @@ def get_remotes(
 
 
 def commits_between_inclusive(
-    commit1: str, commit2: str, *, verbose: bool | int | float
+    commit1: str,
+    commit2: str,
+    *,
+    verbose: bool | int | float = False,
 ):
-
     assert commit1 != commit2
     assert len(commit1) == len(commit2)
     _rev_list_command = sh.Command("git")
@@ -124,11 +131,10 @@ def commits_between_inclusive(
 @click.pass_context
 def cli(
     ctx,
-    verbose: bool | int | float,
     verbose_inf: bool,
     dict_output: bool,
+    verbose: bool | int | float = False,
 ):
-
     tty, verbose = tv(
         ctx=ctx,
         verbose=verbose,
@@ -143,11 +149,10 @@ def cli(
 def list_paths(
     ctx,
     repo_paths: tuple[str],
-    verbose: bool | int | float,
     verbose_inf: bool,
     dict_output: bool,
+    verbose: bool | int | float = False,
 ) -> None:
-
     tty, verbose = tv(
         ctx=ctx,
         verbose=verbose,
@@ -191,11 +196,10 @@ def list_paths(
 def list_remotes(
     ctx,
     repo_paths: tuple[str],
-    verbose: bool | int | float,
     verbose_inf: bool,
     dict_output: bool,
+    verbose: bool | int | float = False,
 ):
-
     tty, verbose = tv(
         ctx=ctx,
         verbose=verbose,
@@ -233,11 +237,10 @@ def list_remotes(
 def unstaged_commit(
     ctx,
     path: str,
-    verbose: bool | int | float,
     verbose_inf: bool,
     dict_output: bool,
+    verbose: bool | int | float = False,
 ):
-
     tty, verbose = tv(
         ctx=ctx,
         verbose=verbose,
@@ -264,11 +267,10 @@ def count_commits(
     ctx,
     commit1: str,
     commit2: str,
-    verbose: bool | int | float,
     verbose_inf: bool,
     dict_output: bool,
+    verbose: bool | int | float = False,
 ):
-
     tty, verbose = tv(
         ctx=ctx,
         verbose=verbose,
@@ -295,11 +297,10 @@ def _seconds_between_commits(
     ctx,
     commit1: str,
     commit2: str,
-    verbose: bool | int | float,
     verbose_inf: bool,
     dict_output: bool,
+    verbose: bool | int | float = False,
 ):
-
     tty, verbose = tv(
         ctx=ctx,
         verbose=verbose,
@@ -322,11 +323,10 @@ def _seconds_between_commits(
 @click.pass_context
 def _head(
     ctx,
-    verbose: bool | int | float,
     verbose_inf: bool,
     dict_output: bool,
+    verbose: bool | int | float = False,
 ):
-
     tty, verbose = tv(
         ctx=ctx,
         verbose=verbose,
