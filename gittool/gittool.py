@@ -34,7 +34,7 @@ def find_repo_root(
     verbose: bool | int | float = False,
 ):
     ic(path)
-    repo_root = walkup_until_found(path=path, name=".git", verbose=verbose).parent
+    repo_root = walkup_until_found(path=path, name=".git").parent
     return repo_root
 
 
@@ -59,24 +59,21 @@ def unstaged_commits_exist(
 ) -> bool:
     # there is likely a angryfiles bug here...
     # result = git("diff-index", "HEAD", "--")
-    repo_root = find_repo_root(path=path, verbose=verbose)
+    repo_root = find_repo_root(path=path)
     if verbose:
         ic(path, repo_root)
     with chdir(repo_root, verbose=verbose):
         git_command = sh.Command("git")
         # git_command.bake('diff-index', "HEAD", "--")
         git_command = git_command.bake("diff-index", "HEAD")
-        if verbose:
-            ic(git_command)
+        ic(git_command)
         results = git_command(_tty_out=False).stdout.decode("utf8").splitlines()
         # ic(result.stdout)
-        if verbose:
-            ic(results)
+        ic(results)
         relative_path = path.relative_to(repo_root)
         # ic(relative_path)
         for result in results:
-            if verbose:
-                ic(result)
+            ic(result)
             if result.endswith(relative_path.as_posix()):
                 return True
         # if path.as_posix() in result:
@@ -121,8 +118,7 @@ def commits_between_inclusive(
     _commit_count = abs(int(str(_rev_list_command(_tty_out=False)).strip())) + 1
 
     # commit_count = str(sh.git.rev-list("--count", "f{commit1}..{commit2}")).strip()
-    if verbose:
-        ic(_commit_count)
+    ic(_commit_count)
     return _commit_count
 
 
@@ -166,7 +162,6 @@ def list_paths(
             valid_types=[
                 bytes,
             ],
-            verbose=verbose,
         )
     del repo_paths
 
@@ -177,15 +172,13 @@ def list_paths(
 
         for thing in repo.open_index():
             repo_file_path = repo_path / Path(os.fsdecode(thing))
-            if verbose:
-                ic(index, repo_path, repo_file_path)
+            ic(index, repo_path, repo_file_path)
             # assert _path.exists()  # nope, use .lstat()
             output(
                 os.fsencode(repo_file_path.as_posix()),
                 dict_output=dict_output,
                 reason=thing,
                 tty=tty,
-                verbose=verbose,
             )
 
 
@@ -213,7 +206,6 @@ def list_remotes(
             valid_types=[
                 bytes,
             ],
-            verbose=verbose,
         )
     del repo_paths
 
@@ -222,11 +214,13 @@ def list_remotes(
         repo_path = Path(os.fsdecode(_path)).resolve()
         remotes = get_remotes(
             repo_path=repo_path,
-            verbose=verbose,
         )
         for remote in remotes:
             output(
-                remote, reason=None, dict_output=dict_output, tty=tty, verbose=verbose
+                remote,
+                reason=None,
+                dict_output=dict_output,
+                tty=tty,
             )
 
 
@@ -248,13 +242,12 @@ def unstaged_commit(
     )
 
     _path = Path(path).resolve()
-    result = unstaged_commits_exist(path=_path, verbose=verbose)
+    result = unstaged_commits_exist(path=_path)
     output(
         result,
         reason=None,
         dict_output=dict_output,
         tty=tty,
-        verbose=verbose,
     )
 
 
@@ -277,14 +270,13 @@ def count_commits(
         verbose_inf=verbose_inf,
     )
 
-    _count = commits_between_inclusive(commit1, commit2, verbose=verbose)
+    _count = commits_between_inclusive(commit1, commit2)
 
     output(
         _count,
         reason=None,
         dict_output=dict_output,
         tty=tty,
-        verbose=verbose,
     )
 
 
@@ -314,7 +306,6 @@ def _seconds_between_commits(
         reason=None,
         dict_output=dict_output,
         tty=tty,
-        verbose=verbose,
     )
 
 
@@ -342,5 +333,4 @@ def _head(
         reason=None,
         dict_output=dict_output,
         tty=tty,
-        verbose=verbose,
     )
