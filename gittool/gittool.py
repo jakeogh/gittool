@@ -64,11 +64,9 @@ def unstaged_commits_exist(
         ic(path, repo_root)
     with chdir(repo_root, verbose=verbose):
         git_command = sh.Command("git")
-        # git_command.bake('diff-index', "HEAD", "--")
         git_command = git_command.bake("diff-index", "HEAD")
         ic(git_command)
         results = git_command(_tty_out=False).stdout.decode("utf8").splitlines()
-        # ic(result.stdout)
         ic(results)
         relative_path = path.relative_to(repo_root)
         # ic(relative_path)
