@@ -142,7 +142,7 @@ def cli(
 @click.pass_context
 def list_paths(
     ctx,
-    repo_paths: tuple[str],
+    repo_paths: tuple[str, ...],
     verbose_inf: bool,
     dict_output: bool,
     verbose: bool | int | float = False,
@@ -186,7 +186,7 @@ def list_paths(
 @click.pass_context
 def list_remotes(
     ctx,
-    repo_paths: tuple[str],
+    repo_paths: tuple[str, ...],
     verbose_inf: bool,
     dict_output: bool,
     verbose: bool | int | float = False,
