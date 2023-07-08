@@ -12,6 +12,7 @@ from signal import signal
 import click
 import sh
 from asserttool import ic
+from asserttool import icp
 from click_auto_help import AHGroup
 from clicktool import click_add_options
 from clicktool import click_global_options
@@ -68,7 +69,7 @@ def unstaged_commits_exist(
         ic(git_command)
         #results = git_command(_tty_out=False).stdout.decode("utf8").splitlines()
         results = git_command(_tty_out=False).splitlines()
-        ic(results)
+        icp(results)
         relative_path = path.relative_to(repo_root)
         # ic(relative_path)
         for result in results:
