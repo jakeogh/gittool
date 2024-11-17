@@ -32,7 +32,6 @@ signal(SIGPIPE, SIG_DFL)
 
 def find_repo_root(
     path: Path,
-    verbose: bool | int | float = False,
 ):
     ic(path)
     repo_root = walkup_until_found(path=path, name=".git").parent
@@ -56,14 +55,12 @@ def seconds_between_commits(commit1: str, commit2: str):
 
 def unstaged_commits_exist(
     path: Path,
-    verbose: bool | int | float = False,
 ) -> bool:
     # there is likely a angryfiles bug here...
     # result = git("diff-index", "HEAD", "--")
     repo_root = find_repo_root(path=path)
-    if verbose:
-        ic(path, repo_root)
-    with chdir(repo_root, verbose=verbose):
+    ic(path, repo_root)
+    with chdir(repo_root):
         git_command = sh.Command("git")
         git_command = git_command.bake("diff-index", "HEAD")
         ic(git_command)
@@ -91,14 +88,12 @@ def unstaged_commits_exist(
 
 def get_remotes(
     repo_path: Path,
-    verbose: bool | int | float = False,
 ) -> list[dict]:
     repo = Repo(repo_path)
     remotes = []
     for config_file in repo.get_config_stack().backends:
         for k, v in config_file.items():
-            if verbose:
-                print(f"{k=}", f"{v=}")
+            ic(f"{k=}", f"{v=}")
             if k[0] == b"remote":
                 remotes.append({k[1].decode("utf8"): v[b"url"].decode("utf8")})
     return remotes
@@ -107,8 +102,6 @@ def get_remotes(
 def commits_between_inclusive(
     commit1: str,
     commit2: str,
-    *,
-    verbose: bool | int | float = False,
 ):
     assert commit1 != commit2
     assert len(commit1) == len(commit2)
@@ -129,7 +122,7 @@ def cli(
     ctx,
     verbose_inf: bool,
     dict_output: bool,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ):
     tty, verbose = tv(
         ctx=ctx,
@@ -147,7 +140,7 @@ def list_paths(
     repo_paths: tuple[str, ...],
     verbose_inf: bool,
     dict_output: bool,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ) -> None:
     tty, verbose = tv(
         ctx=ctx,
@@ -191,7 +184,7 @@ def list_remotes(
     repo_paths: tuple[str, ...],
     verbose_inf: bool,
     dict_output: bool,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ):
     tty, verbose = tv(
         ctx=ctx,
@@ -233,7 +226,7 @@ def unstaged_commit(
     path: str,
     verbose_inf: bool,
     dict_output: bool,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ):
     tty, verbose = tv(
         ctx=ctx,
@@ -262,7 +255,7 @@ def count_commits(
     commit2: str,
     verbose_inf: bool,
     dict_output: bool,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ):
     tty, verbose = tv(
         ctx=ctx,
@@ -291,7 +284,7 @@ def _seconds_between_commits(
     commit2: str,
     verbose_inf: bool,
     dict_output: bool,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ):
     tty, verbose = tv(
         ctx=ctx,
@@ -316,7 +309,7 @@ def _head(
     ctx,
     verbose_inf: bool,
     dict_output: bool,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ):
     tty, verbose = tv(
         ctx=ctx,
