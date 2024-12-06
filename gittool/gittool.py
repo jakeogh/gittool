@@ -45,8 +45,9 @@ def get_repo_hashes(
     ic(path)
     with chdir(path) as ph:
         results = sh.git(["rev-list", "--all", "--full-history"])
-        # icp(results)
-    return results
+        _split_results = results.splitlines()
+        icp(_split_results)
+    return _split_results
 
 
 def timestamp_for_commit(commit):
