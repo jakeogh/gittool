@@ -16,8 +16,9 @@ from asserttool import icp
 from click_auto_help import AHGroup
 from clicktool import click_add_options
 from clicktool import click_global_options
-from clicktool import tv
+from clicktool import tvicgvd
 from dulwich.repo import Repo
+from globalverbose import gvd
 from mptool import output
 from unmp import unmp
 from walkup_until_found import walkup_until_found
@@ -36,6 +37,16 @@ def find_repo_root(
     ic(path)
     repo_root = walkup_until_found(path=path, name=".git").parent
     return repo_root
+
+
+def get_repo_hashes(
+    path: Path,
+):
+    ic(path)
+    with chdir(path) as ph:
+        results = sh.git(["rev-list", "--all", "--full-history"])
+        icp(results)
+    return results
 
 
 def timestamp_for_commit(commit):
@@ -124,10 +135,12 @@ def cli(
     dict_output: bool,
     verbose: bool = False,
 ):
-    tty, verbose = tv(
+    tty, verbose = tvicgvd(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
+        ic=ic,
+        gvd=gvd,
     )
 
 
@@ -142,10 +155,12 @@ def list_paths(
     dict_output: bool,
     verbose: bool = False,
 ) -> None:
-    tty, verbose = tv(
+    tty, verbose = tvicgvd(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
+        ic=ic,
+        gvd=gvd,
     )
 
     if repo_paths:
@@ -186,10 +201,12 @@ def list_remotes(
     dict_output: bool,
     verbose: bool = False,
 ):
-    tty, verbose = tv(
+    tty, verbose = tvicgvd(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
+        ic=ic,
+        gvd=gvd,
     )
 
     if repo_paths:
@@ -228,10 +245,12 @@ def unstaged_commit(
     dict_output: bool,
     verbose: bool = False,
 ):
-    tty, verbose = tv(
+    tty, verbose = tvicgvd(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
+        ic=ic,
+        gvd=gvd,
     )
 
     _path = Path(path).resolve()
@@ -257,10 +276,12 @@ def count_commits(
     dict_output: bool,
     verbose: bool = False,
 ):
-    tty, verbose = tv(
+    tty, verbose = tvicgvd(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
+        ic=ic,
+        gvd=gvd,
     )
 
     _count = commits_between_inclusive(commit1, commit2)
@@ -286,10 +307,12 @@ def _seconds_between_commits(
     dict_output: bool,
     verbose: bool = False,
 ):
-    tty, verbose = tv(
+    tty, verbose = tvicgvd(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
+        ic=ic,
+        gvd=gvd,
     )
 
     _count = seconds_between_commits(commit1, commit2)
@@ -311,10 +334,12 @@ def _head(
     dict_output: bool,
     verbose: bool = False,
 ):
-    tty, verbose = tv(
+    tty, verbose = tvicgvd(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
+        ic=ic,
+        gvd=gvd,
     )
 
     _rev_parse = sh.Command("git")
