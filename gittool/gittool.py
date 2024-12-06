@@ -46,7 +46,7 @@ def get_repo_hashes(
     with chdir(path) as ph:
         results = sh.git(["rev-list", "--all", "--full-history"])
         _split_results = results.splitlines()
-        icp(_split_results)
+        # icp(_split_results)
     return _split_results
 
 
