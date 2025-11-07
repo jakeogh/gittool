@@ -10,7 +10,7 @@ from signal import SIGPIPE
 from signal import signal
 
 import click
-import sh
+import hs
 from asserttool import ic
 from asserttool import icp
 from click_auto_help import AHGroup
@@ -26,7 +26,6 @@ from with_chdir import chdir
 
 # from dulwich import porcelain
 
-sh.mv = None  # use sh.busybox('mv'), coreutils ignores stdin read errors
 
 signal(SIGPIPE, SIG_DFL)
 
@@ -43,17 +42,17 @@ def get_repo_hashes(
     path: Path,
 ):
     ic(path)
-    with chdir(path) as ph:
-        results = sh.git(["rev-list", "--all", "--full-history"])
+    with chdir(path) as _:
+        results = hs.Command("git")(["rev-list", "--all", "--full-history"])
         _split_results = results.splitlines()
         # icp(_split_results)
     return _split_results
 
 
 def timestamp_for_commit(commit):
-    _tsc = sh.Command("git")
-    _tsc = _tsc.bake("log")
-    _tsc = _tsc.bake("-1", commit, "--pretty=format:%ct")
+    _tsc = hs.Command("git")
+    _tsc.bake("log")
+    _tsc.bake("-1", commit, "--pretty=format:%ct")
     _ts = int(str(_tsc(_tty_out=False)).strip())
     return _ts
 
@@ -73,8 +72,8 @@ def unstaged_commits_exist(
     repo_root = find_repo_root(path=path)
     ic(path, repo_root)
     with chdir(repo_root):
-        git_command = sh.Command("git")
-        git_command = git_command.bake("diff-index", "HEAD")
+        git_command = hs.Command("git")
+        git_command.bake("diff-index", "HEAD")
         ic(git_command)
         # results = git_command(_tty_out=False).stdout.decode("utf8").splitlines()
         results = git_command(_tty_out=False).splitlines()
@@ -89,10 +88,10 @@ def unstaged_commits_exist(
         #    return True
     return False
 
-    # _git = sh.Command("/home/cfg/git/unstaged_changes_exist_for_file.sh")
+    # _git = hs.Command("/home/cfg/git/unstaged_changes_exist_for_file.sh")
     # try:
     #    _git(path.as_posix())
-    # except sh.ErrorReturnCode_1 as e:
+    # except hs.ErrorReturnCode_1 as e:
     #    ic(e)
     #    return True
     # return False
@@ -117,12 +116,12 @@ def commits_between_inclusive(
 ):
     assert commit1 != commit2
     assert len(commit1) == len(commit2)
-    _rev_list_command = sh.Command("git")
-    _rev_list_command = _rev_list_command.bake("rev-list")
-    _rev_list_command = _rev_list_command.bake("--count", f"{commit1}..{commit2}")
+    _rev_list_command = hs.Command("git")
+    _rev_list_command.bake("rev-list")
+    _rev_list_command.bake("--count", f"{commit1}..{commit2}")
     _commit_count = abs(int(str(_rev_list_command(_tty_out=False)).strip())) + 1
 
-    # commit_count = str(sh.git.rev-list("--count", "f{commit1}..{commit2}")).strip()
+    # commit_count = str(hs.git.rev-list("--count", "f{commit1}..{commit2}")).strip()
     ic(_commit_count)
     return _commit_count
 
@@ -343,12 +342,12 @@ def _head(
         gvd=gvd,
     )
 
-    _rev_parse = sh.Command("git")
-    _rev_parse = _rev_parse.bake("rev-parse", "HEAD")
-    _rev_parse = str(_rev_parse(_tty_out=False)).strip()
+    _rev_parse = hs.Command("git")
+    _rev_parse.bake("rev-parse", "HEAD")
+    _rev_parse_result = str(_rev_parse(_tty_out=False)).strip()
 
     output(
-        _rev_parse,
+        _rev_parse_result,
         reason=None,
         dict_output=dict_output,
         tty=tty,
