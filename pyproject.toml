@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gittool"
+version = "1!0.0.1787469735"
+description = "git functions"
+authors = [
+    { name = "Justin Keogh", email = "github.com@v6y.net" },
+]
+license = "ISC"
+requires-python = ">=3.12"
+dependencies = [
+    "click",
+]
+
+[project.urls]
+Homepage = "https://github.com/jakeogh/gittool"
+
+[project.scripts]
+gittool = "gittool.gittool:cli"
+
+[tool.setuptools]
+packages = ["gittool"]
+
+[tool.setuptools.package-data]
+gittool = ["py.typed"]

@@ -72,6 +72,12 @@ def unstaged_commits_exist(
     repo_root = find_repo_root(path=path)
     ic(path, repo_root)
     with chdir(repo_root):
+        # diff-index answers from the index's stat data, so a file rewritten
+        # with the content it already had -- what an editor does on every
+        # save -- reads as modified until the index is reconciled with the
+        # working tree. Exits non-zero when entries needed updating, which is
+        # the ordinary case for the file just saved.
+        hs.Command("git")("update-index", "--refresh", _ok_code=[0, 1])
         git_command = hs.Command("git")
         git_command.bake("diff-index", "HEAD")
         ic(git_command)
@@ -82,7 +88,9 @@ def unstaged_commits_exist(
         # ic(relative_path)
         for result in results:
             ic(result)
-            if result.endswith(relative_path.as_posix()):
+            # ":<mode> <mode> <sha> <sha> <status>\t<path>". Matching the tail
+            # of the line instead matched a/b.py against xa/b.py as well.
+            if result.split("\t", 1)[-1] == relative_path.as_posix():
                 return True
         # if path.as_posix() in result:
         #    return True
