@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gittool"
-version = "1!0.0.1787469735"
+version = "1!0.0.1788144750"
 description = "git functions"
 authors = [
     { name = "Justin Keogh", email = "github.com@v6y.net" },

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 from signal import SIG_DFL
 from signal import SIGPIPE
@@ -16,11 +17,8 @@ from asserttool import icp
 from click_auto_help import AHGroup
 from clicktool import click_add_options
 from clicktool import click_global_options
-from clicktool import tvicgvd
+from clicktool import tvic
 from dulwich.repo import Repo
-from globalverbose import gvd
-from mptool import output
-from unmp import unmp
 from walkup_until_found import walkup_until_found
 from with_chdir import chdir
 
@@ -28,6 +26,10 @@ from with_chdir import chdir
 
 
 signal(SIGPIPE, SIG_DFL)
+
+
+def _stdin_paths() -> list[bytes]:
+    return [line for line in sys.stdin.buffer.read().split(b"\n") if line]
 
 
 def find_repo_root(
@@ -143,12 +145,11 @@ def cli(
     dict_output: bool,
     verbose: bool = False,
 ):
-    tty, verbose = tvicgvd(
+    tty, verbose = tvic(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
         ic=ic,
-        gvd=gvd,
     )
 
 
@@ -163,22 +164,17 @@ def list_paths(
     dict_output: bool,
     verbose: bool = False,
 ) -> None:
-    tty, verbose = tvicgvd(
+    tty, verbose = tvic(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
         ic=ic,
-        gvd=gvd,
     )
 
     if repo_paths:
         iterator = repo_paths
     else:
-        iterator = unmp(
-            valid_types=[
-                bytes,
-            ],
-        )
+        iterator = _stdin_paths()
     del repo_paths
 
     index = 0
@@ -190,12 +186,8 @@ def list_paths(
             repo_file_path = repo_path / Path(os.fsdecode(thing))
             ic(index, repo_path, repo_file_path)
             # assert _path.exists()  # nope, use .lstat()
-            output(
-                os.fsencode(repo_file_path.as_posix()),
-                dict_output=dict_output,
-                reason=thing,
-                tty=tty,
-            )
+            encoded = os.fsencode(repo_file_path.as_posix())
+            print({thing: encoded} if dict_output else encoded, flush=True)
 
 
 @cli.command("list-remotes")
@@ -209,22 +201,17 @@ def list_remotes(
     dict_output: bool,
     verbose: bool = False,
 ):
-    tty, verbose = tvicgvd(
+    tty, verbose = tvic(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
         ic=ic,
-        gvd=gvd,
     )
 
     if repo_paths:
         iterator = repo_paths
     else:
-        iterator = unmp(
-            valid_types=[
-                bytes,
-            ],
-        )
+        iterator = _stdin_paths()
     del repo_paths
 
     index = 0
@@ -234,12 +221,7 @@ def list_remotes(
             repo_path=repo_path,
         )
         for remote in remotes:
-            output(
-                remote,
-                reason=None,
-                dict_output=dict_output,
-                tty=tty,
-            )
+            print({None: remote} if dict_output else remote, flush=True)
 
 
 @cli.command("unstaged-commit")
@@ -253,22 +235,16 @@ def unstaged_commit(
     dict_output: bool,
     verbose: bool = False,
 ):
-    tty, verbose = tvicgvd(
+    tty, verbose = tvic(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
         ic=ic,
-        gvd=gvd,
     )
 
     _path = Path(path).resolve()
     result = unstaged_commits_exist(path=_path)
-    output(
-        result,
-        reason=None,
-        dict_output=dict_output,
-        tty=tty,
-    )
+    print({None: result} if dict_output else result, flush=True)
 
 
 @cli.command()
@@ -284,22 +260,15 @@ def count_commits(
     dict_output: bool,
     verbose: bool = False,
 ):
-    tty, verbose = tvicgvd(
+    tty, verbose = tvic(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
         ic=ic,
-        gvd=gvd,
     )
 
     _count = commits_between_inclusive(commit1, commit2)
-
-    output(
-        _count,
-        reason=None,
-        dict_output=dict_output,
-        tty=tty,
-    )
+    print({None: _count} if dict_output else _count, flush=True)
 
 
 @cli.command("seconds-between-commits")
@@ -315,22 +284,15 @@ def _seconds_between_commits(
     dict_output: bool,
     verbose: bool = False,
 ):
-    tty, verbose = tvicgvd(
+    tty, verbose = tvic(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
         ic=ic,
-        gvd=gvd,
     )
 
     _count = seconds_between_commits(commit1, commit2)
-
-    output(
-        _count,
-        reason=None,
-        dict_output=dict_output,
-        tty=tty,
-    )
+    print({None: _count} if dict_output else _count, flush=True)
 
 
 @cli.command("head")
@@ -342,21 +304,15 @@ def _head(
     dict_output: bool,
     verbose: bool = False,
 ):
-    tty, verbose = tvicgvd(
+    tty, verbose = tvic(
         ctx=ctx,
         verbose=verbose,
         verbose_inf=verbose_inf,
         ic=ic,
-        gvd=gvd,
     )
 
     _rev_parse = hs.Command("git")
     _rev_parse.bake("rev-parse", "HEAD")
     _rev_parse_result = str(_rev_parse(_tty_out=False)).strip()
 
-    output(
-        _rev_parse_result,
-        reason=None,
-        dict_output=dict_output,
-        tty=tty,
-    )
+    print({None: _rev_parse_result} if dict_output else _rev_parse_result, flush=True)
